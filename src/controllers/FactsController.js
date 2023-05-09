@@ -18,20 +18,22 @@ class FactsController {
   }
 
   show(request, response) {
+    const { id } = request.params;
     try {
       const data = fs.readFileSync(dbPath, "utf8");
-      const facts = JSON.parse(data);
-      const id = parseInt(request.params.id);
-      const fact = facts.find((f) => f.id === id);
+      const facts = JSON.parse(data)["facts"];
+      const fact = facts.find((f) => f.id == id);
       if (!fact) {
-        return response.status(404).json({ erro: "Fato não encontrado!" });
+        return response
+          .status(404)
+          .json({ erro: "Nenhum fato foi encontrado!" });
       }
-      return response.status(200).json(fact);
+      return response.json(fact);
     } catch (e) {
       console.log(e);
       return response
         .status(500)
-        .json({ erro: "Não foi possível executar esta operação!" });
+        .json({ erro: "Não foi possível executar esta operação" });
     }
   }
 
